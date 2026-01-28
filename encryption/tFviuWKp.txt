@@ -1,0 +1,41 @@
+Before MINT-20 can be installed create the necessary partitions in Win10.
+Start Powershell as Administrator and run 'diskpart'.
+
+DISKPART> select disk 0
+DISKPART> list partition
+
+  Partition ###  Type              Size     Offset
+  -------------  ----------------  -------  -------
+  Partition 1    Recovery           499 MB  1024 KB
+  Partition 2    System              99 MB   500 MB
+  Partition 3    Reserved            16 MB   599 MB
+  Partition 4    Primary            200 GB   615 MB
+
+create partition primary size=512       (Win: Partition 5) (Linux: /dev/sda5)
+create partition primary size=51200	(Win: Partition 6) (Linux: /dev/sda6)
+
+    1  setxkbmap de
+    2  PBOOT=/dev/sda5
+    3  PLUKS=/dev/sda6
+    4  sudo mkfs.ext2 $PBOOT
+    5  sudo cryptsetup luksFormat $PLUKS
+    6  sudo cryptsetup luksOpen $PLUKS cryptmk
+    7  sudo dd if=/dev/zero of=/dev/mapper/cryptmk bs=16M
+    8  sudo pvcreate /dev/mapper/cryptmk
+    9  sudo vgcreate vgmk /dev/mapper/cryptmk
+   10  sudo lvcreate -n lvmkswap -L 8G vgmk
+   11  sudo lvcreate -n lvmkroot -l 100%FREE vgmk
+   12  sudo mkfs.ext4 /dev/mapper/vgmk-lvmkroot
+   13  sudo mkswap /dev/mapper/vgmk-lvmkswap
+   14  echo "now install ubuntu graphically and assign the partitions"
+   15  sudo mount /dev/mapper/vgmk-lvmkroot /mnt/
+   16  sudo mount $PBOOT /mnt/boot/
+   17  sudo mount --bind /dev/ /mnt/dev/
+   18  echo -e "cryptmk UUID=`sudo blkid -o value $PLUKS | head -1` none luks,retry=1,lvm=vgmk" | sudo tee -a /mnt/etc/crypttab
+   19  sudo chroot /mnt/ mount -t proc proc /proc/
+   20  sudo chroot /mnt/ mount -t sysfs sys /sys/
+   21  sudo chroot /mnt/ mount -t devpts devpts /dev/pts/
+   22  sudo chroot /mnt/ update-initramfs -k all -c
+   23  echo "[Done]. You can reboot now."
+   
+   # based on: https://askubuntu.com/questions/293028/how-can-i-install-ubuntu-encrypted-with-luks-with-dual-boot/293029#293029

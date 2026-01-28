@@ -1,0 +1,145 @@
+Before you begin this tutorial partition your disk
+within Windows and create two partitions for Linux:
++ BOOT-PARTITION (ca. 4GB)
++ ROOT-PARTITION (min. 30GB) (200 GB SYSTEM + 16GB SWAP) = 221884 (--> 221886)
+
+# ===================================================================================================================================
+
+    1  setxkbmap de
+    2  sudo fdisk -l
+    3  PBOOT=/dev/nvme0n1p4
+    4  PLUKS=/dev/nvme0n1p5
+    5  sudo mkfs.ext2 $PBOOT
+    6  sudo cryptsetup luksFormat $PLUKS
+    7  sudo cryptsetup luksOpen $PLUKS cryptmk
+    8  # sudo dd if=/dev/zero of=/dev/mapper/cryptmk bs=16M  # Unnecessary, takes forever
+    9  sudo pvcreate /dev/mapper/cryptmk
+   10  sudo vgcreate vgmk /dev/mapper/cryptmk
+   11  sudo lvcreate -n lvmkswap -L 16G vgmk
+   12  sudo lvcreate -n lvmkroot -l 100%FREE vgmk
+   13  sudo mkfs.ext4 /dev/mapper/vgmk-lvmkroot
+   14  sudo mkswap /dev/mapper/vgmk-lvmkswap
+   15  echo "now install ubuntu graphically and assign the partitions"
+   16  sudo mount /dev/mapper/vgmk-lvmkroot /mnt/
+   17  sudo mount $PBOOT /mnt/boot/
+   18  sudo mount --bind /dev/ /mnt/dev/
+   19  echo "cryptmk UUID=$(sudo blkid -s UUID -o value $PLUKS) none luks,discard,retry=1,lvm=vgmk" | sudo tee -a /mnt/etc/crypttab
+   20  sudo chroot /mnt/ mount -t proc proc /proc/
+   21  sudo chroot /mnt/ mount -t sysfs sys /sys/
+   22  sudo chroot /mnt/ mount -t devpts devpts /dev/pts/
+   23  sudo chroot /mnt/ update-initramfs -k all -c
+   24  echo "[Done]. You can reboot now."
+   25  history > AC71541G-history.txt
+
+# ===================================================================================================================================
+
+    1  setxkbmap de
+    2  sudo fdisk -l
+    3  PBOOT=/dev/nvme0n1p4
+    4  PLUKS=/dev/nvme0n1p5
+    5  sudo mkfs.ext4 $PBOOT
+    6  sudo cryptsetup luksFormat $PLUKS
+    7  sudo cryptsetup luksOpen $PLUKS cryptmk
+    8  # sudo dd if=/dev/zero of=/dev/mapper/cryptmk bs=16M  # Unnecessary, takes forever
+    9  sudo pvcreate /dev/mapper/cryptmk
+   10  sudo vgcreate vgmk /dev/mapper/cryptmk
+   11  sudo lvcreate -n lvmkswap -L 16G vgmk
+   12  sudo lvcreate -n lvmkroot -l 100%FREE vgmk
+   13  sudo mkfs.ext4 /dev/mapper/vgmk-lvmkroot
+   14  sudo mkswap /dev/mapper/vgmk-lvmkswap
+   15  echo "============================================"
+   16  echo "Now install Linux Mint graphically:"
+   17  echo "- Assign /dev/mapper/vgmk-lvmkroot to /"
+   18  echo "- Assign /dev/nvme0n1p4 to /boot"
+   19  echo "- Assign /dev/mapper/vgmk-lvmkswap as swap"
+   20  echo "- Install bootloader to /dev/nvme0n1p4 (boot partition)"
+   21  echo "============================================"
+   22  read -p "Press Enter when installation is complete..."
+   23  sudo mount /dev/mapper/vgmk-lvmkroot /mnt/
+   24  sudo mount $PBOOT /mnt/boot/
+   25  sudo mount --bind /dev/ /mnt/dev/
+   26  echo "cryptmk UUID=$(sudo blkid -s UUID -o value $PLUKS) none luks,discard,retry=1,lvm=vgmk" | sudo tee -a /mnt/etc/crypttab
+   27  echo ""
+   28  echo "Verifying crypttab:"
+   29  cat /mnt/etc/crypttab
+   30  echo ""
+   31  sudo chroot /mnt/ mount -t proc proc /proc/
+   32  sudo chroot /mnt/ mount -t sysfs sys /sys/
+   33  sudo chroot /mnt/ mount -t devpts devpts /dev/pts/
+   34  echo "Updating initramfs..."
+   35  sudo chroot /mnt/ update-initramfs -k all -c
+   36  echo "Installing/updating GRUB to boot partition..."
+   37  sudo chroot /mnt/ grub-install /dev/nvme0n1p4
+   38  sudo chroot /mnt/ update-grub
+   39  echo ""
+   40  echo "============================================"
+   41  echo "[Done]. You can reboot now."
+   42  echo "GRUB will appear first, then you can select:"
+   43  echo "  - Linux Mint (enter LUKS password)"
+   44  echo "  - Windows (chains to VeraCrypt)"
+   45  echo "============================================"
+   46  history > AC71541G-history.txt
+
+# ===================================================================================================================================
+
+
+sudo fdisk -l
+Disk /dev/loop0: 2.38 GiB, 2550788096 bytes, 4982008 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/nvme0n1: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: Samsung SSD 970 EVO Plus 1TB            
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 34B586D8-A99E-496E-B128-304978165068
+
+Device              Start        End    Sectors  Size Type
+/dev/nvme0n1p1       2048     206847     204800  100M EFI System
+/dev/nvme0n1p2     206848     239615      32768   16M Microsoft reserved
+/dev/nvme0n1p3     239616  419670429  419430814  200G Microsoft basic data
+/dev/nvme0n1p4  419672064  430157823   10485760    5G Microsoft basic data
+/dev/nvme0n1p5  430157824  587444223  157286400   75G Microsoft basic data
+/dev/nvme0n1p6  587444224 1950593023 1363148800  650G Microsoft basic data
+/dev/nvme0n1p7 1950593024 1953523711    2930688  1.4G Windows recovery environment
+
+
+Disk /dev/sda: 28.65 GiB, 30765219840 bytes, 60088320 sectors
+Disk model:  SanDisk 3.2Gen1
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xd548b2ee
+
+Device     Boot   Start      End  Sectors  Size Id Type
+/dev/sda1  *         64  5990687  5990624  2.9G  0 Empty
+/dev/sda2          8364    18475    10112  4.9M ef EFI (FAT-12/16/32)
+/dev/sda3       5992448 60088319 54095872 25.8G 83 Linux
+
+# ===================================================================================================================================
+
+mint@mint:~$ sudo chroot /mnt/ update-initramfs -k all -c
+update-initramfs: Generating /boot/initrd.img-5.15.0-91-generic
+cryptsetup: WARNING: cryptmk: ignoring unknown option 'retry'
+cryptsetup: WARNING: cryptmk: ignoring unknown option 'lvm'
+W: Possible missing firmware /lib/firmware/amdgpu/yellow_carp_gpu_info.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/vangogh_gpu_info.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/cyan_skillfish_rlc.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/cyan_skillfish_mec2.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/cyan_skillfish_mec.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/cyan_skillfish_me.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/cyan_skillfish_pfp.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/cyan_skillfish_ce.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/cyan_skillfish_sdma1.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/cyan_skillfish_sdma.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/sienna_cichlid_mes.bin for module amdgpu
+W: Possible missing firmware /lib/firmware/amdgpu/navi10_mes.bin for module amdgpu
+
+# ===================================================================================================================================
+
+based on: https://askubuntu.com/questions/293028/how-can-i-install-ubuntu-encrypted-with-luks-with-dual-boot/293029#293029

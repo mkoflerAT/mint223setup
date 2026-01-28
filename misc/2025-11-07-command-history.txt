@@ -1,0 +1,31 @@
+    1  sudo apt update && sudo apt upgrade -y
+    2  mkdir -p ~/.config/wireplumber/main.lua.d/
+    3  cp /media/mkoflerat/MINT222/addon//wireplumber/main.lua.d/50-alsa-config.lua             ~/.config/wireplumber/main.lua.d/
+    4  cp /media/mkoflerat/MINT222/addon//wireplumber/main.lua.d/90-enable-all.lua              ~/.config/wireplumber/main.lua.d/
+    5  cp /media/mkoflerat/MINT222/addon//wireplumber/main.lua.d/50-disable-session-suspend.lua ~/.config/wireplumber/main.lua.d/
+
+   12  mkdir -p ~/source/mint-setup
+   13  cp /media/mkoflerat/MINT222/addon/*.sh ~/source/mint-setup/
+   14  cd ~/source/mint-setup/
+   15  chmod +x *.sh
+   17  ./01-install-network-shares-mkoflerat.sh
+   18  ./02-install-brave.sh
+   19  ./03-install-veracrypt.sh
+   20  ./04-install-keepassxc.sh
+   21  ./05-install-protonvpn.sh
+   22  ./06-install-signal.sh 
+   23  ./07-install-vscode.sh 
+   24  ./08-install-git-mkoflerat.sh
+   25  ./09-install-dotnet-core.sh 
+   26  ./10-install-powershell.sh
+   27  ./11-install-steam.sh
+   28  ./12-install-fido2-manage.sh
+
+Do this manually
+
+   18  sudo nano /root/.cifs
+   19  sudo systemctl daemon-reload
+   20  sudo mount -a
+   xx  systemctl --user restart pipewire wireplumber pipewire-pulse
+   xx  watch -cd -n .1 pactl list short sinks
+

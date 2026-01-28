@@ -1,0 +1,35 @@
+Online-Source:  https://tinyurl.com/mint22-encryption / https://pastebin.com/raw/TJ1q363f
+
+    1  setxkbmap de
+    2  sudo fdisk -l
+    3  PBOOT=/dev/nvme0n1p5
+    4  PLUKS=/dev/nvme0n1p6
+    5  sudo mkfs.ext4 $PBOOT
+    6  sudo cryptsetup luksFormat $PLUKS
+    7  sudo cryptsetup luksOpen $PLUKS cryptmk
+    8  # sudo dd if=/dev/zero of=/dev/mapper/cryptmk bs=16M  # Unnecessary, takes forever
+    9  sudo pvcreate /dev/mapper/cryptmk
+   10  sudo vgcreate vgmk /dev/mapper/cryptmk
+   11  sudo lvcreate -n lvmkswap -L 16G vgmk
+   12  sudo lvcreate -n lvmkroot -l 100%FREE vgmk
+   13  sudo mkfs.ext4 /dev/mapper/vgmk-lvmkroot
+   14  sudo mkswap /dev/mapper/vgmk-lvmkswap
+   15  echo "============================================================================================="
+   16  echo "Now install Linux Mint graphically and DO NOT RESTART -----> Choose 'Continue testing'"
+   17  echo "- Assign /dev/mapper/vgmk-lvmkroot:          Use as: EXT4    Format: Yes Mount-Point: /"
+   18  echo "- Assign /dev/mapper/vgmk-lvmkswap           Use as: SWAP    Should be set automatically"
+   19  echo "- Assign /dev/nvme0n1p5 to /boot             Use as: EXT4    Format: Yes Mount-Point: /boot"
+   20  echo "- Set 'Device for boot loader installation: /dev/nvme0n1p5   Check size(!) Should be 4GB"
+   21  echo "============================================================================================="
+   22  read -p "Press Enter when installation is complete..."
+   23  sudo mount /dev/mapper/vgmk-lvmkroot /mnt/
+   24  sudo mount $PBOOT /mnt/boot/
+   25  sudo mount --bind /dev/ /mnt/dev/
+   26  echo "cryptmk UUID=$(sudo blkid -s UUID -o value $PLUKS) none luks,discard" | sudo tee -a /mnt/etc/crypttab
+   27  sudo chroot /mnt/ mount -t proc proc /proc/
+   28  sudo chroot /mnt/ mount -t sysfs sys /sys/
+   29  sudo chroot /mnt/ mount -t devpts devpts /dev/pts/
+   30  echo "Updating initramfs..."
+   31  sudo chroot /mnt/ update-initramfs -k all -c
+   32  echo "[Done]. You can reboot now."
+

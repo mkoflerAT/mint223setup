@@ -1,0 +1,72 @@
+mkdir ~/.ssh
+
+./fido2-manage.sh -reset -device 1
+./fido2-manage.sh -setPIN -device 1
+./fido2-manage.sh -uvs -device 1
+./fido2-manage.sh -residentKeys -device 1
+
+./fido2-manage.sh -delete -device 1 -credential "00: 14BJxKGWoLoGVsE8/L5eJutVAyMAl4Dn/idVA1sfR08= ssh:all"
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103699974067-common -O resident -O verify-required -C "t2f2-66103699974067-common" -O application=ssh:t2f2-66103699974067-common
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103699974067-device -O resident -O verify-required -C "t2f2-66103699974067-device" -O application=ssh:t2f2-66103699974067-device
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103699974067-github -O resident -O verify-required -C "t2f2-66103699974067-github" -O application=ssh:t2f2-66103699974067-github
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103699974067-ovhvps -O resident -O verify-required -C "t2f2-66103699974067-ovhvps" -O application=ssh:t2f2-66103699974067-ovhvps
+
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103719064212-common -O resident -O verify-required -C "t2f2-66103719064212-common" -O application=ssh:t2f2-66103719064212-common
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103719064212-device -O resident -O verify-required -C "t2f2-66103719064212-device" -O application=ssh:t2f2-66103719064212-device
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103719064212-github -O resident -O verify-required -C "t2f2-66103719064212-github" -O application=ssh:t2f2-66103719064212-github
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103719064212-ovhvps -O resident -O verify-required -C "t2f2-66103719064212-ovhvps" -O application=ssh:t2f2-66103719064212-ovhvps
+
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103608237743-common -O resident -O verify-required -C "t2f2-66103608237743-common" -O application=ssh:t2f2-66103608237743-common
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103608237743-device -O resident -O verify-required -C "t2f2-66103608237743-device" -O application=ssh:t2f2-66103608237743-device
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103608237743-github -O resident -O verify-required -C "t2f2-66103608237743-github" -O application=ssh:t2f2-66103608237743-github
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103608237743-ovhvps -O resident -O verify-required -C "t2f2-66103608237743-ovhvps" -O application=ssh:t2f2-66103608237743-ovhvps
+
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103159174886-common -O resident -O verify-required -C "t2f2-66103159174886-common" -O application=ssh:t2f2-66103159174886-common
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103159174886-device -O resident -O verify-required -C "t2f2-66103159174886-device" -O application=ssh:t2f2-66103159174886-device
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103159174886-github -O resident -O verify-required -C "t2f2-66103159174886-github" -O application=ssh:t2f2-66103159174886-github
+ssh-keygen -t ed25519-sk -f ~/.ssh/t2f2-66103159174886-ovhvps -O resident -O verify-required -C "t2f2-66103159174886-ovhvps" -O application=ssh:t2f2-66103159174886-ovhvps
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Token2-Serial-Numbers:
+======================
+66103699974067
+66103719064212
+66103608237743
+66103159174886
+
+.\fido2-manage.exe -list
+.\fido2-manage.exe -reset -device
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+On a fresh installed Linux-System import the keys like this:
+
+mkdir ~/.ssh
+cd ~/.ssh
+ssh-keygen -K
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+To connect to a server (e.g. a setup Ubuntu-server, that has a the public ssh-key for Github)
+
+ssh -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519_sk_rk_t2f2-66103699974067-github root@192.168.1.33
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+nano ~/.ssh/config
+```
+Add this:
+```
+Host ovh-server
+    HostName 192.168.1.33
+    User ldaine
+    IdentityFile ~/.ssh/id_ed25519_sk_rk_t2f2-66103699974067-github
+    IdentitiesOnly yes
+
+Resources:
+https://claude.ai/share/fa6d1c58-8215-465a-bacc-d2e62c64fbe8
+
+
+
+
+

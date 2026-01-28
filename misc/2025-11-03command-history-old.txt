@@ -1,0 +1,169 @@
+    1  sudo apt update && sudo apt upgrade -y
+    2  cd setup/
+    3  chmod 700 *.sh
+    4  sudo apt update && sudo apt upgrade -y
+    5  ./01-install-network-shares-mkoflerat.sh
+    6  sudo nano /root/.cifs
+    7  sudo systemctl daemon-reload
+    8  sudo mount -a
+    9  ./02-install-brave.sh
+   10  ./03-install-vscode.sh
+   11  ./04-install-git-mkoflerat.sh
+   12  ./05-install-veracrypt.sh
+   13  ./06-install-protonvpn.sh
+   14  ./07-install-powershell.sh
+   15  ./08-install-signal.sh
+   16  ./09-install-dotnet-core.sh
+   17  mkdir ~/source
+   18  mkdir ~/source/testapp
+   19  cd ~/source/testapp/
+   20  dotnet new blazor --auth Individual
+   21  code .
+   22  dotnet linux-dev-certs trust
+   23  echo $PATH
+   24  PATH=$PATH:~/.dotnet/tools
+   25  dotnet linux-dev-certs trust
+   26  dotnet linux-dev-certs https --trust
+   27  dotnet dev-certs https --trust
+   28  sudo apt update
+   29  sudo apt update bitwarden
+   30  sudo apt upgrade bitwarden
+   31  sudo apt install keepass2
+   32  cd /usr/lib/keepass2/Plugins/
+   33  ll
+   34  cd ~/Downloads/
+   35  chmod +x ./install-fido2-manage.sh
+   36  ./install-fido2-manage.sh
+   37  cd fido2-manage/
+   38  python3 gui.py
+   39  ./fido2-manage.sh
+   40  ./fido2-manage.sh -list
+   41  ./fido2-manage.sh -reset -device 1
+   42  ./fido2-manage.sh -reset -device 2
+   43  ./fido2-manage.sh -list
+   44  ./fido2-manage.sh -reset -device 1
+   45  cd ..
+   46  ll
+   47  cat /sys/module/snd_hda_intel/parameters/power_save
+   48  sudo nano /sys/module/snd_hda_intel/parameters/power_save
+   49  sudo su
+   50  history 
+   51  inxi -A
+   52  cd setup/
+   53  nano fix-pipewire-settings.sh
+   54  chmod +x fix-pipewire-settings.sh
+   55  cat fix-pipewire-settings.sh
+   56  ./fix-pipewire-settings.sh
+   57  sudo nano ~/.config/pipewire/pipewire.conf
+   58  pw-metadata -n settings 0 clock.force-quantum 512
+   59  pw-metadata -n settings 0 clock.force-quantum 1024
+   60  pw-metadata -n settings 0 clock.force-quantum 2048
+   61  pw-metadata -n settings 0 clock.force-quantum 512
+   62  diff /home/mkoflerat/NAS/home/50-alsa-config.lua /usr/share/wireplumber/main.lua.d/50-alsa-config.lua
+   63  diff /home/mkoflerat/NAS/home/40-device-defaults.lua /usr/share/wireplumber/main.lua.d/40-device-defaults.lua 
+   64  diff /home/mkoflerat/NAS/home/90-enable-all.lua /usr/share/wireplumber/main.lua.d/90-enable-all.lua 
+   65  sudo nano /usr/share/pipewire/pipewire-pulse.conf
+   66  watch -cd -n .1 pactl list short sinks
+   67  pw-metadata -n settings 0 clock.force-quantum 256/44100
+   68  sudo nano /usr/share/wireplumber/main.lua.d/50-alsa-config.lua
+   69  sudo systemctl --user restart pipewire wireplumber
+   70  systemctl --user restart pipewire wireplumber
+   71  sudo nano /usr/share/wireplumber/main.lua.d/50-alsa-config.lua
+   72  history 
+   73  cat fix-pipewire-settings.sh 
+   74  nano ~/.config/pipewire/
+   75  nano ~/.config/pipewire/pipewire.conf 
+   76  pactl info
+   77  pw-metadata -n settings 0 clock.force-quantum 512
+   78  history 
+   79  cd Downloads/fido2-manage/
+   80  ll
+   81  ./fido2-manage.sh -reset -device 1
+   82  ./fido2-manage.sh
+   83  ./fido2-manage.sh -setPIN -device 1
+   84  ./fido2-manage.sh -changePIN -device 1
+   85  ./fido2-manage.sh -reset -device 1
+   86  ./fido2-manage.sh -uvs -device 1
+   87  ./fido2-manage.sh -setPIN -device 1
+   88  ./fido2-manage.sh -reset -device 1
+   89  ./fido2-manage.sh -uvs -device 1
+   90  ./fido2-manage.sh -setPIN -device 1
+   91  ./fido2-manage.sh -reset -device 1
+   92  ./fido2-manage.sh -uvs -device 1
+   93  ./fido2-manage.sh -setPIN -device 1
+   94  ./fido2-manage.sh -reset -device 1
+   95  ./fido2-manage.sh -uvs -device 1
+   96  ./fido2-manage.sh -setPIN -device 1
+   97  ./fido2-manage.sh -reset -device 1
+   98  ./fido2-manage.sh -uvs -device 1
+   99  ./fido2-manage.sh -reset -device 1
+  100  ./fido2-manage.sh -setPIN -device 1
+  101  ./fido2-manage.sh -reset -device 1
+  102  ./fido2-manage.sh -setPIN -device 1
+  103  ./fido2-manage.sh -reset -device 1
+  104  ./fido2-manage.sh -setPIN -device 1
+  105  watch -cd -n .1 pactl list short sinks
+  106  cd setup/
+  107  ll
+  108  cp fix-pipewire-settings.sh fix-pipewire-audio-delay-by-disabling-suspend.sh
+  109  nano fix-pipewire-audio-delay-by-disabling-suspend.sh
+  110  mkdir -p ~/.config/wireplumber/main.lua.d/
+  111  nano ~/.config/wireplumber/main.lua.d/50-disable-session-suspend.lua
+  112  systemctl --user restart pipewire wireplumber
+  113  watch -cd -n .1 pactl list short sinks
+  114  rm ~/.config/wireplumber/main.lua.d/50-disable-session-suspend.lua
+  115  sudo nano /usr/share/wireplumber/main.lua.d/90-enable-all.lua
+  116  systemctl --user restart pipewire wireplumber
+  117  watch -cd -n .1 pactl list short sinks
+  118  sudo systemctl restart pipewire wireplumber
+  119  systemctl restart pipewire wireplumber
+  120  watch -cd -n .1 pactl list short sinks
+  121  systemctl --user status pipewire
+  122  systemctl --user restart pipewire
+  123  watch -cd -n .1 pactl list short sinks
+  124  nano ~/.config/wireplumber/wirepluber.conf.d/50-disable-seession-suspend.conf
+  125  mkdir -p ~/.config/wireplumber/wirepluber.conf.d/
+  126  nano ~/.config/wireplumber/wirepluber.conf.d/50-disable-seession-suspend.conf
+  127  systemctl --user restart pipewire
+  128  watch -cd -n .1 pactl list short sinks
+  129  sudo nano /usr/share/wireplumber/main.lua.d/90-enable-all.lua
+  130  systemctl --user restart pipewire
+  131  systemctl --user restart pipewire wireplumber
+  132  watch -cd -n .1 pactl list short sinks
+  133  ystemctl --user restart wireplumber pipewire pipewire-pulse
+  134  systemctl --user restart wireplumber pipewire pipewire-pulse
+  135  watch -cd -n .1 pactl list short sinks
+  136  systemctl --user restart pipewire wireplumber pipewire-pulse
+  137  watch -cd -n .1 pactl list short sinks
+  138  sudo apt remove speech-dispatcher
+  139  killall speech-dispatcher
+  140  exit
+  141  systemctl --user restart pipewire pipewire-pulse wireplumber
+  142  pulseaudio -k
+  143  watch -cd -n .1 pactl list short sinks
+  144  history 
+  145  sudo nano /usr/share/wireplumber/main.lua.d/50-alsa-config.lua
+  146  systemctl --user restart wireplumber
+  147  watch -cd -n .1 pactl list short sinks
+  148  history 
+  149  invoke 129
+  150  sudo nano /usr/share/wireplumber/main.lua.d/90-enable-all.lua
+  151  sudo nano /usr/share/wireplumber/scripts/suspend-node.lua
+  152  ll
+  153  mkdir -p ~/source/blazorapp
+  154  ~/source/blazorapp
+  155  cd ~/source/blazorapp
+  156  dotnet new blazor --auth Individual
+  157  code .
+  158  dotnet new blazor --auth Individual --help
+  159  dotnet new blazor --auth Individual --use-program-main
+  160  dotnet new blazor --auth Individual --use-program-main --force
+  161  dotnet new blazor --auth Individual --force
+  162  dotnet new blazor --auth Individual --use-program-main --force
+  163  dotnet new blazor --auth Individual --force
+  164  dotnet new blazor --auth Individual --use-program-main --force
+  165  dotnet new blazor --auth Individual --force
+  166  dotnet new blazor --auth Individual --use-program-main --force
+  167  dotnet new blazor --auth Individual --force
+  168  cd /media/mkoflerat/MINT222/addon/command-history.txt
+  169  history > /media/mkoflerat/MINT222/addon/command-history.txt
