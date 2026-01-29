@@ -29,15 +29,14 @@ SCRIPTS=(
     "02-install-brave.sh"
     "03-install-veracrypt.sh"
     "04-install-keepassxc.sh"
-    "05-install-protonvpn.sh"
-    "06-install-signal.sh"
-    "07-install-vscode.sh"
-    "08-install-git.sh"
-    "09-install-dotnet-core.sh"
-    "10-install-powershell.sh"
-    "11-install-steam.sh"
-    "12-install-fido2-manage.sh"
-    "13-install-docker.sh"
+    "05-install-signal.sh"
+    "06-install-vscode.sh"
+    "07-install-git.sh"
+    "08-install-dotnet-core.sh"
+    "09-install-powershell.sh"
+    "10-install-steam.sh"
+    "11-install-fido2-manage.sh"
+    "12-install-docker.sh"
 )
 
 for script in "${SCRIPTS[@]}"; do
