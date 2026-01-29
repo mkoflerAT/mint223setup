@@ -52,7 +52,7 @@ echo "========================================"
 # Run scripts with USERNAME parameter where applicable
 for script in "${SCRIPTS[@]}"; do
     case "$script" in
-        01-install-network-shares.sh|08-install-git.sh)
+        01-install-network-shares.sh|07-install-git.sh)
             echo "Running: $script (with USERNAME=$USERNAME)"
             ./"$script" "$USERNAME"
             ;;
