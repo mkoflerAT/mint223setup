@@ -1,15 +1,38 @@
 #!/bin/bash
 # -----------------------------------------------------------------------------------------------------------------------
-# https://protonvpn.com/support/official-linux-vpn-ubuntu/
+# ProtonVPN Installation for Linux/Ubuntu
+# Official guide: https://protonvpn.com/support/official-linux-vpn-ubuntu/
 # -----------------------------------------------------------------------------------------------------------------------
 
+set -e
+
 echo 'Installing ProtonVPN...'
-wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.8_all.deb
-sudo DEBIAN_FRONTEND=noninteractive dpkg -i ./protonvpn-stable-release_1.0.8_all.deb && sudo apt update
-# sudo apt-get install protonvpn protonvpn-cli -y
-sudo DEBIAN_FRONTEND=noninteractive apt install -y proton-vpn-gnome-desktop
-echo 'Clean-up downloaded packages...'
-rm ./protonvpn-stable-release_1.0.8_all.deb
-echo 'Installing tray-icon for ProtonVPN...'
-sudo DEBIAN_FRONTEND=noninteractive apt install -y libayatana-appindicator3-1 gir1.2-ayatanaappindicator3-0.1 gnome-shell-extension-appindicator
-echo 'ProtonVPN should now be installed in your system. After starting ProtonVPN you should see the tray-icon.'
+
+# Add ProtonVPN repository key
+echo "Adding ProtonVPN repository..."
+sudo mkdir -p /usr/share/keyrings
+sudo curl -fsSL https://repo.protonvpn.com/debian/PUBLIC.KEY -o /usr/share/keyrings/protonvpn-keyring.asc
+
+# Add ProtonVPN repository
+echo "deb [signed-by=/usr/share/keyrings/protonvpn-keyring.asc] https://repo.protonvpn.com/debian stable main" | sudo tee /etc/apt/sources.list.d/protonvpn.sources > /dev/null
+
+# Update package list
+sudo apt update
+
+# Install ProtonVPN
+echo "Installing ProtonVPN application..."
+sudo apt install -y proton-vpn-gnome-desktop
+
+# Install appindicator support for system tray
+echo "Installing appindicator support for system tray..."
+sudo apt install -y libayatana-appindicator3-1 gir1.2-ayatanaappindicator3-0.1 gnome-shell-extension-appindicator
+
+echo '=========================================='
+echo 'ProtonVPN has been installed successfully!'
+echo '=========================================='
+echo ''
+echo 'To use ProtonVPN:'
+echo '1. Launch ProtonVPN from your applications menu'
+echo '2. Sign in with your ProtonVPN account'
+echo '3. The system tray icon should appear when running'
+echo ''
