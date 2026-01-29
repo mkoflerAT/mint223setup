@@ -40,6 +40,7 @@ SCRIPTS=(
     "10-install-steam.sh"
     "11-install-fido2-manage.sh"
     "12-install-docker.sh"
+    "13-install-protonvpn.sh"
 )
 
 for script in "${SCRIPTS[@]}"; do
