@@ -5,6 +5,9 @@
 
 set -e
 
+# Start timer
+START_TIME=$(date +%s)
+
 USERNAME="${1:-mkoflerat}"
 REPO_URL="${2:-https://raw.githubusercontent.com/mkoflerAT/mint223setup/main}"
 WORK_DIR="${3:-/tmp/mint223setup}"
@@ -50,7 +53,21 @@ echo "Running installation scripts..."
 echo "========================================"
 
 # Run scripts with USERNAME parameter where applicable
+SCRIPT_COUNT=${#SCRIPTS[@]}
+CURRENT_SCRIPT=0
+
 for script in "${SCRIPTS[@]}"; do
+    CURRENT_SCRIPT=$((CURRENT_SCRIPT + 1))
+    PROGRESS=$((CURRENT_SCRIPT * 100 / SCRIPT_COUNT))
+    
+    # Simple progress bar
+    BAR_LENGTH=40
+    FILLED=$((PROGRESS * BAR_LENGTH / 100))
+    BAR=$(printf '%0.s#' $(seq 1 $FILLED))
+    EMPTY=$(printf '%0.s-' $(seq 1 $((BAR_LENGTH - FILLED))))
+    
+    echo "[$BAR$EMPTY] $PROGRESS% ($CURRENT_SCRIPT/$SCRIPT_COUNT)"
+    
     case "$script" in
         01-install-network-shares.sh|07-install-git.sh)
             echo "Running: $script (with USERNAME=$USERNAME)"
@@ -67,6 +84,15 @@ done
 echo "========================================"
 echo "Installation complete!"
 echo "========================================"
+echo ""
+
+# Calculate and display elapsed time
+END_TIME=$(date +%s)
+ELAPSED=$((END_TIME - START_TIME))
+MINUTES=$((ELAPSED / 60))
+SECONDS=$((ELAPSED % 60))
+
+echo "Installation time: ${MINUTES}m ${SECONDS}s"
 echo ""
 echo "Next steps:"
 echo "1. Configure CIFS credentials: sudo nano /root/.cifs"
