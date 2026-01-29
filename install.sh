@@ -42,11 +42,26 @@ SCRIPTS=(
     "12-install-docker.sh"
 )
 
+# Post-install scripts: downloaded but not executed by the main installer
+POST_SCRIPTS=(
+    "post-install-powershell-full.ps1"
+)
+
 for script in "${SCRIPTS[@]}"; do
     echo "Downloading: $script"
     curl -fsSL "$REPO_URL/$script" -o "$script"
     chmod +x "$script"
 done
+
+# Download post-install scripts (do not execute them as part of the main run)
+if [ "${#POST_SCRIPTS[@]}" -gt 0 ]; then
+    echo "Downloading post-install scripts..."
+    for script in "${POST_SCRIPTS[@]}"; do
+        echo "Downloading post-install: $script"
+        curl -fsSL "$REPO_URL/$script" -o "$script"
+        chmod 644 "$script"
+    done
+fi
 
 echo ""
 echo "Running installation scripts..."
