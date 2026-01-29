@@ -58,7 +58,7 @@ for script in "${SCRIPTS[@]}"; do
             ;;
         *)
             echo "Running: $script"
-            ./"$script" < /dev/null
+            ./"$script"
             ;;
     esac
     echo ""
