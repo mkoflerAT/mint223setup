@@ -96,6 +96,10 @@ for script in "${SCRIPTS[@]}"; do
     echo ""
 done
 
+echo "Fix suspendimg audio to prevent crackles"
+echo "========================================"
+echo "options snd_hda_intel power_save=0" | sudo tee /etc/modprobe.d/audio_disable_powersave.conf
+
 echo "========================================"
 echo "Installation complete!"
 echo "========================================"
