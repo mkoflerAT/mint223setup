@@ -8,7 +8,7 @@ USERNAME="${1:-$USERNAME}"
 
 # User configurations
 declare -A GIT_NAME=([ldaine]="Liga Daine" [mkoflerat]="Markus Kofler")
-declare -A GIT_EMAIL=([ldaine]="liga.daine@daine-it.com" [mkoflerat]="git@markuskofler.com")
+declare -A GIT_EMAIL=([ldaine]="liga.daine@daine-it.com" [mkoflerat]="markus.kofler@kofler-it.com")
 
 # Validate user
 if [[ -z "$USERNAME" ]] || [[ ! -v GIT_NAME[$USERNAME] ]]; then
