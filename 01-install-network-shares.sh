@@ -7,7 +7,7 @@
 USERNAME="${1:-$USERNAME}"
 
 # User configurations
-declare -A NASIP=([ldaine]="192.168.20.100" [mkoflerat]="192.168.10.100" [tvmedia]="192.168.10.100")
+declare -A NASIP=([ldaine]="192.168.10.100" [mkoflerat]="192.168.10.100" [tvmedia]="192.168.10.100")
 declare -A SHARES=([ldaine]="home" [mkoflerat]="home" [tvmedia]="home movies music series")
 
 # Validate user
